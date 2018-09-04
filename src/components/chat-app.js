@@ -51,6 +51,13 @@ class App extends Component {
     })
   }
 
+  sendMessage(text) {
+    this.currentUser.sendMessage({
+      text,
+      roomId: roomId
+    })
+  }
+
   render() {
     return (
       <div className="app">
