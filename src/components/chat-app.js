@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 import MessageList from './message-list.js';
+import SendMessageForm from './message-form.js';
 
 const instanceLocator = 'v1:us1:fb1efffd-18a0-42a2-87a3-2ba8787b1259';
 const testToken = 'https://us1.pusherplatform.io/services/chatkit_token_provider/v1/fb1efffd-18a0-42a2-87a3-2ba8787b1259/token';
@@ -27,6 +28,28 @@ class App extends Component {
     }
   }
 
+  componentDidMount() {
+    const chatManager = new Chatkit.ChatManager({
+      instanceLocator: instanceLocator,
+      userId: username,
+      tokenProvider: new Chatkit.TokenProvider({
+        url: testToken
+      })
+    })
+
+    chatManager.connect().then(currentUser => {
+      currentUser.subscribeToRoom({
+        roomId: roomId,
+        hooks: {
+          onNewMessage: message => {
+            this.setState({
+              messages: [...this.state.messages, message]
+            })
+          }
+        }
+      })
+    })
+  }
 
   render() {
     return (
